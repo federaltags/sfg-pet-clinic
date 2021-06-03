@@ -1,53 +1,40 @@
 package guru.springframework.sfgpetclinic.model;
 
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
-/**
- * Created by jt on 7/13/18.
- */
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "pets")
-public class Pet extends BaseEntity{
+public class Pet {
 
-    @Builder
-    public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
-        super(id);
-        this.name = name;
+    private PetType petType;
+    private Owner owner;
+    private LocalDate birthDate;
+
+    public Pet(PetType petType, Owner owner, LocalDate birthDate) {
         this.petType = petType;
         this.owner = owner;
         this.birthDate = birthDate;
-
-        if (visits == null || visits.size() > 0 ) {
-            this.visits = visits;
-        }
     }
 
-    @Column(name = "name")
-    private String name;
+    public PetType getPetType() {
+        return petType;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private PetType petType;
+    public void setPetType(PetType petType) {
+        this.petType = petType;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private Owner owner;
+    public Owner getOwner() {
+        return owner;
+    }
 
-    @Column(name = "birth_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthDate;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
-    private Set<Visit> visits = new HashSet<>();
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
 
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 }
