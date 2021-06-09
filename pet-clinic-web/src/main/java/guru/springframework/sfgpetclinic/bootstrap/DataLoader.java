@@ -1,10 +1,8 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
-import guru.springframework.sfgpetclinic.model.Owner;
-import guru.springframework.sfgpetclinic.model.Pet;
-import guru.springframework.sfgpetclinic.model.PetType;
-import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.*;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
+import guru.springframework.sfgpetclinic.services.SpecialityService;
 import guru.springframework.sfgpetclinic.services.map.OwnerMapService;
 import guru.springframework.sfgpetclinic.services.map.VetMapService;
 import org.springframework.boot.CommandLineRunner;
@@ -18,15 +16,26 @@ public class DataLoader implements CommandLineRunner {
     private final OwnerMapService ownerService;
     private final VetMapService vetService;
     private final PetTypeService petTypeService;
+    private final SpecialityService specialityService;
 
-    public DataLoader(OwnerMapService ownerService, VetMapService vetService, PetTypeService petTypeService) {
+    public DataLoader(OwnerMapService ownerService,
+                      VetMapService vetService,
+                      PetTypeService petTypeService,
+                      SpecialityService specialityService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.specialityService = specialityService;
     }
 
     @Override
     public void run(String... args) {
+        if (petTypeService.findAll().isEmpty()) {
+            loadData();
+        }
+    }
+
+    private void loadData() {
         var dog = new PetType();
         dog.setName("dog");
         var savedDogType = petTypeService.save(dog);
@@ -34,7 +43,6 @@ public class DataLoader implements CommandLineRunner {
         var cat = new PetType();
         cat.setName("cat");
         var savedCatPetType = petTypeService.save(cat);
-
 
 
         var owner1 = new Owner();
@@ -71,15 +79,29 @@ public class DataLoader implements CommandLineRunner {
 
         System.out.println("Loading owners...");
 
+        var radiology = new Speciality();
+        radiology.setDescription("radiology");
+        var savedRadiology = specialityService.save(radiology);
+
+        var surgery = new Speciality();
+        surgery.setDescription("surgery");
+        var savedSurgery = specialityService.save(surgery);
+
+        var dentistry = new Speciality();
+        dentistry.setDescription("dentistry");
+        var savedDentistry = specialityService.save(dentistry);
+
         var vet1 = new Vet();
         vet1.setFirstName("Sam");
         vet1.setLastName("Axe");
+        vet1.getSpecialities().add(savedRadiology);
 
         vetService.save(vet1);
 
         var vet2 = new Vet();
         vet2.setFirstName("Jessie");
         vet2.setLastName("Porter");
+        vet2.getSpecialities().add(savedSurgery);
 
         vetService.save(vet2);
 
