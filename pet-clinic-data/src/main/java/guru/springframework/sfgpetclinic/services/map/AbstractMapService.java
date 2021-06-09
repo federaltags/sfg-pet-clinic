@@ -41,6 +41,6 @@ public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> 
         if(map.isEmpty()) {
             return 1L;
         }
-        return Collections.max(map.keySet());
+        return Collections.max(map.keySet()) + 1;
     }
 }
